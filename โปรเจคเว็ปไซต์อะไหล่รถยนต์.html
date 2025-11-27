@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Ironparts ร้านอะไหล่รถยนต์</title>
+<meta name="description" content="ร้านอะไหล่รถยนต์ — ตัวอย่างหน้าแรก (mockup) แบบ HTML/CSS + ตะกร้า" />
+<style>
+  :root{
+    --brand:#e60012;
+    --dark:#111827;
+    --muted:#6b7280;
+    --card:#ffffff;
+    --bg:#f7f8fb;
+    --max-width:1200px;
+    --gap:18px;
+    font-family:"Inter","Noto Sans Thai",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  img{max-width:100%;display:block}
+  body{background:var(--bg);color:var(--dark);line-height:1.4}
+
+  .wrap{max-width:var(--max-width);margin:0 auto;padding:20px}
+  header{background:#fff;border-bottom:1px solid #eceff3}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:62px;height:52px;border-radius:6px;background:linear-gradient(180deg,var(--brand),#b7000f);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;box-shadow: 0 4px 12px rgba(0,0,0,0.06);}
+  .site-name{font-weight:700}
+  nav.main-nav{display:flex;gap:12px;align-items:center}
+  nav.main-nav a{color:var(--muted);text-decoration:none;padding:10px 12px;border-radius:8px;font-weight:600}
+  nav.main-nav a:hover{background:#f2f4f7;color:var(--dark)}
+
+  .search-row{display:flex;gap:12px;margin-top:12px}
+  .searchbox{flex:1;display:flex;align-items:center;background:#fff;padding:10px;border-radius:10px;border:1px solid #eef2f5;gap:8px}
+  .searchbox input{border:0;outline:none;font-size:15px;flex:1}
+  .btn{background:var(--brand);color:#fff;padding:10px 14px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
+
+  .hero{display:grid;grid-template-columns:1fr 360px;gap:18px;margin:18px 0}
+  .hero-card{background:linear-gradient(180deg,#fff,#fbfdff);padding:22px;border-radius:12px;box-shadow:0 8px 30px rgba(15,20,30,0.04)}
+  .hero h1{font-size:24px;margin-bottom:8px}
+  .hero p{color:var(--muted);margin-bottom:12px}
+
+  .main{display:grid;grid-template-columns:260px 1fr;gap:18px}
+  .card{background:var(--card);padding:14px;border-radius:10px;border:1px solid #f0f3f7}
+
+  .categories h4{margin-bottom:10px}
+  .category-list{display:flex;flex-direction:column;gap:8px}
+  .category-item{display:flex;justify-content:space-between;padding:10px;border-radius:8px;cursor:pointer}
+  .category-item:hover{background:#fafafa}
+
+  .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+  .product{border-radius:10px;overflow:hidden;background:white;border:1px solid #f1f5f9;display:flex;flex-direction:column;transition:transform .16s ease, box-shadow .16s ease;}
+  .product:hover{transform:translateY(-6px);box-shadow:0 14px 30px rgba(12,20,30,0.06)}
+  .prod-media{height:150px;background:linear-gradient(180deg,#fafbfc,#f3f6f8);display:flex;align-items:center;justify-content:center;padding:12px}
+  .prod-body{padding:12px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .prod-title{font-weight:700;font-size:15px}
+  .prod-meta{color:var(--muted);font-size:13px}
+  .prod-row{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+  .price{font-weight:800;color:var(--brand)}
+  .small{font-size:13px;color:var(--muted)}
+
+  .flex{display:flex;align-items:center;gap:10px}
+  .center{text-align:center}
+  .pill{padding:6px 10px;border-radius:999px;border:1px solid #efeef0;font-weight:700;background:#fff}
+
+  footer{margin-top:28px;padding:18px 0;color:var(--muted);font-size:14px}
+
+  /* ==== ตะกร้าสินค้า ==== */
+  .cart-modal{position:fixed;top:0;right:0;width:350px;height:100%;background:#fff;box-shadow:-2px 0 12px rgba(0,0,0,0.1);padding:20px;overflow-y:auto;transform:translateX(100%);transition:transform .3s ease;z-index:100}
+  .cart-modal.show{transform:translateX(0)}
+  .cart-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f3f7}
+  .cart-item button{padding:4px 8px;border-radius:6px;border:1px solid #ccc;background:#f9f9f9;cursor:pointer}
+  .cart-total{margin-top:12px;font-weight:800;text-align:right;line-height:1.4}
+
+  /* ==== Modal ==== */
+  .modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:200}
+  .modal-bg.show{display:flex}
+  .modal-content{background:#fff;padding:20px;border-radius:10px;max-width:500px;width:90%;position:relative}
+  .modal-content img{max-width:100%;margin-bottom:10px}
+  .close-modal{position:absolute;top:10px;right:10px;background:transparent;border:none;font-size:18px;cursor:pointer;color:#333}
+
+  @media (max-width:1000px){.hero{grid-template-columns:1fr}.main{grid-template-columns:1fr} nav.main-nav{display:none}}
+  @media (max-width:560px){.search-row{flex-direction:column}.topbar{flex-direction:column;align-items:flex-start;gap:10px}.logo{width:52px;height:44px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">IP</div>
+        <div>
+          <div class="site-name">Ironparts</div>
+          <div class="small">อะไหล่รถยนต์ ครบ จบในที่เดียว</div>
+        </div>
+      </div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#">หน้าแรก</a>
+        <a href="#">หมวดหมู่</a>
+        <a href="#">โปรโมชั่น</a>
+        <a href="#">สาขา</a>
+        <a href="#">ติดต่อ</a>
+      </nav>
+    </div>
+    <div class="search-row">
+      <div class="searchbox">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="#9CA3AF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><circle cx="11" cy="11" r="6" stroke="#9CA3AF" stroke-width="2"/></svg>
+        <input type="search" id="searchInput" placeholder="ค้นหาอะไหล่ / รุ่นรถ / รหัสสินค้า" oninput="searchProducts()" />
+        <button class="btn">ค้นหา</button>
+      </div>
+      <div class="flex">
+        <div class="pill" onclick="toggleCart()">ตะกร้า (<span id="cartCount">0</span>)</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="hero-card">
+      <h1>อะไหล่คุณภาพ ราคายุติธรรม — ค้นหาง่าย จัดส่งทั่วไทย</h1>
+      <p>เลือกจากหมวดหมู่ ยี่ห้อ หรือค้นหาด้วยรหัสสินค้า เรามีอะไหล่ทั้ง OEM และทดแทนจากแบรนด์ชั้นนำ</p>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <div class="pill">ผ้าเบรก</div>
+        <div class="pill">แบตเตอรี่</div>
+        <div class="pill">ไส้กรอง</div>
+        <div class="pill">น้ำมันเครื่อง</div>
+      </div>
+    </div>
+    <aside class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="font-weight:800">บริการ/โปรโมชั่น</div>
+        <div class="small">จัดส่งเร็ว • ติดตั้ง</div>
+      </div>
+      <div style="margin-top:12px">
+        <img src="https://www.superpart.co.th/wp-content/uploads/2025/03/%E0%B9%81%E0%B8%9A%E0%B8%A3%E0%B8%99%E0%B8%94%E0%B9%8C555_1920x975_0.jpg" alt="banner" style="border-radius:8px" />
+      </div>
+    </aside>
+  </section>
+
+  <section class="main">
+    <aside class="card">
+      <div class="categories">
+        <h4>หมวดหมู่สินค้า</h4>
+        <div class="category-list">
+          <div class="category-item"><span>ผ้าเบรก</span><span class="small">(100)</span></div>
+          <div class="category-item"><span>แบตเตอรี่</span><span class="small">(100)</span></div>
+          <div class="category-item"><span>ไส้กรอง</span><span class="small">(100)</span></div>
+          <div class="category-item"><span>โช้คอัพ</span><span class="small">(100)</span></div>
+          <div class="category-item"><span>น้ำมันเครื่อง</span><span class="small">(100)</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <section>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-weight:800">สินค้าทั้งหมด</div>
+      </div>
+      <div id="productsGrid" class="products-grid"></div>
+    </section>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+    <div>
+      <div style="font-weight:800">Ironparts </div>
+      <div class="small">ที่อยู่: กรุงเทพฯ • โทร: 065 423 0090</div>
+    </div>
+    <div class="small">© <span id="year"></span> Ironparts</div>
+  </div>
+</footer>
+
+<!-- ==== ตะกร้า + ปุ่มชำระเงิน ==== -->
+<div class="cart-modal" id="cartModal">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h3>ตะกร้าสินค้า</h3>
+    <button onclick="toggleCart()" style="background:transparent;border:none;font-size:18px;cursor:pointer">×</button>
+  </div>
+  <div id="cartItems"></div>
+  <div id="cartSummary" class="cart-total">
+    รวมก่อนลด: ฿0<br>
+    ส่วนลด: ฿0<br>
+    ยอดสุทธิ: ฿0
+  </div>
+  <button class="btn" style="width:100%;margin-top:12px" onclick="showPaymentModal()">ชำระเงิน</button>
+</div>
+
+<!-- Modal รายละเอียดสินค้า -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeModal()">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- Modal เลือกช่องทางชำระเงิน -->
+<div class="modal-bg" id="paymentModal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closePaymentModal()">×</button>
+    <h3>เลือกช่องทางชำระเงิน</h3>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px">
+      <button class="btn" onclick="payVia('PromptPay')">พร้อมเพย์</button>
+      <button class="btn" onclick="payVia('QR Code')">QR Code</button>
+      <button class="btn" onclick="payVia('TrueMoney')">TrueMoney Wallet</button>
+    </div>
+    <div id="paymentInfo" style="margin-top:16px;text-align:center;color:var(--brand)"></div>
+  </div>
+</div>
+
+<script>
+  // ==== Footer ปีปัจจุบัน ====
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ==== สินค้า ====
+  const products = [
+    { title:"ผ้าดิสเบรกหน้า CAMRY ปี 2007-2011 ACV4# TRW", brand:"GoodBrake", code:"GB-1234", stock:100, price:1150, img:"https://inwfile.com/s-fz/696asr.jpg" },
+    { title:"แบตเตอรี่แห้ง Bosch SMF Battery AGM Auxiliary BLA-12 12A", brand:"BOSCH", code:"BOS-123", stock:100, price:2450, img:"https://www.superpart.co.th/wp-content/uploads/2025/09/SPP-102316-Y432-0205-000-0000-01-1.jpg" },
+    { title:"กรองเครื่อง SWIFT ปี 12-17 1.2B K12B แท้ห้างSZ เหล็ก", brand:"PureFilter", code:"PF-009", stock:100, price:280, img:"https://www.superpart.co.th/wp-content/uploads/2025/02/ff38c079de2ef37af6e2417e1bbacd9b-1024x1024.jpg" },
+    { title:"โช้คอัพหน้า-หลัง HONDA CITY ปี 2009-2013 TOKICO แก๊ส(L/R)", brand:"TOKICO", code:"TOK-456", stock:100, price:4900, img:"https://www.superpart.co.th/wp-content/uploads/2025/07/61615588-1024x1024.jpg" },
+    { title:"น้ำมันเครื่องเบนซิน MOTUL TRD Sport Engine Oil 5W30 Gasoline 1L", brand:"MOTUL", code:"MOT-789", stock:100, price:515, img:"https://www.superpart.co.th/wp-content/uploads/2025/08/Motul-TRD-5W30-1L-GAS.jpg" },
+    { title:"หัวเพลาขับทั้งชุด ALTIS ปี 08-10 1.8 A/T MOTIF (R)ABS", brand:"MOTIF", code:"MOT-101", stock:100, price:2250, img:"https://www.superpart.co.th/wp-content/uploads/2025/02/ad4675f26ff039fceb4f40b3a8fff89f.jpg" }
+  ];
+
+  let cart = [];
+
+  // ==== render สินค้า ====
+  function renderProducts(list){
+    const grid = document.getElementById('productsGrid');
+    grid.innerHTML='';
+    list.forEach((p,i)=>{
+      const prod = document.createElement('article');
+      prod.className='product';
+      prod.innerHTML=`
+        <div class="prod-media"><img src="${p.img}" alt="${p.title}"></div>
+        <div class="prod-body">
+          <div class="prod-title">${p.title}</div>
+          <div class="prod-meta">Brand: ${p.brand} • รหัส: ${p.code}</div>
+          <div class="prod-meta small">สต็อก: ${p.stock}</div>
+          <div class="prod-row">
+            <div><div class="price">${p.price} ฿</div></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn" onclick="addToCart(${i})" style="padding:8px 10px;border-radius:8px;font-size:14px">ใส่ตะกร้า</button>
+              <button style="background:transparent;border:none;color:var(--muted);cursor:pointer" onclick="showModal(${i})">ดูรายละเอียด</button>
+            </div>
+          </div>
+        </div>`;
+      grid.appendChild(prod);
+    });
+  }
+  renderProducts(products);
+
+  // ==== ตะกร้า ====
+  function addToCart(index){
+    const p = products[index];
+    const exist = cart.find(item=>item.code===p.code);
+    if(exist){ exist.qty++; }
+    else{ cart.push({...p, qty:1}); }
+    updateCart();
+    toggleCart(); // เปิดตะกร้าอัตโนมัติ
+  }
+
+  function updateCart(){
+    const container = document.getElementById('cartItems');
+    container.innerHTML='';
+    let subtotal = 0;
+    cart.forEach((item,i)=>{
+      subtotal += item.price*item.qty;
+      const div = document.createElement('div');
+      div.className='cart-item';
+      div.innerHTML=`
+        <span>${item.title} (${item.qty})</span>
+        <span>
+          <button onclick="changeQty(${i},-1)">-</button>
+          <button onclick="changeQty(${i},1)">+</button>
+          <button onclick="removeItem(${i})">x</button>
+        </span>`;
+      container.appendChild(div);
+    });
+
+    // โปรโมชั่น ลด 10%
+    let discount = subtotal >= 5000 ? subtotal*0.10 : 0;
+    let total = subtotal - discount;
+
+    document.getElementById('cartSummary').innerHTML = `
+      รวมก่อนลด: ฿${subtotal.toFixed(0)}<br>
+      ส่วนลด: ฿${discount.toFixed(0)}<br>
+      ยอดสุทธิ: ฿${total.toFixed(0)}
+    `;
+
+    document.getElementById('cartCount').textContent = cart.reduce((a,b)=>a+b.qty,0);
+  }
+
+  function changeQty(i,delta){
+    cart[i].qty += delta;
+    if(cart[i].qty<=0) cart.splice(i,1);
+    updateCart();
+  }
+
+  function removeItem(i){ cart.splice(i,1); updateCart(); }
+
+  function toggleCart(){ document.getElementById('cartModal').classList.toggle('show'); }
+
+  // ==== รายละเอียดสินค้า ====
+  function showModal(i){
+    const p = products[i];
+    const modal = document.getElementById('modalBg');
+    document.getElementById('modalBody').innerHTML=`
+      <img src="${p.img}" alt="${p.title}">
+      <h3>${p.title}</h3>
+      <p>Brand: ${p.brand}</p>
+      <p>รหัส: ${p.code}</p>
+      <p>สต็อก: ${p.stock}</p>
+      <p>ราคา: ${p.price} ฿</p>
+    `;
+    modal.classList.add('show');
+  }
+  function closeModal(){ document.getElementById('modalBg').classList.remove('show'); }
+  document.getElementById('modalBg').addEventListener('click', function(e){ if(e.target === this) closeModal(); });
+
+  // ==== ค้นหา ====
+  function searchProducts(){
+    const keyword = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = products.filter(p=>p.title.toLowerCase().includes(keyword) || p.brand.toLowerCase().includes(keyword) || p.code.toLowerCase().includes(keyword));
+    renderProducts(filtered);
+  }
+
+  // ==== คลิกหมวดหมู่ ====
+  document.querySelectorAll('.category-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const cat = el.querySelector('span').textContent.toLowerCase();
+      const filtered = products.filter(p=>p.title.toLowerCase().includes(cat));
+      renderProducts(filtered);
+    });
+  });
+
+  // ==== ชำระเงิน ====
+  function showPaymentModal(){
+    if(cart.length === 0){ alert("ตะกร้าว่าง!"); return; }
+    document.getElementById('paymentModal').classList.add('show');
+    document.getElementById('paymentInfo').innerHTML='';
+  }
+  function closePaymentModal(){ document.getElementById('paymentModal').classList.remove('show'); }
+
+  function payVia(method){
+    let subtotal = cart.reduce((a,b)=>a+b.price*b.qty,0);
+    let discount = subtotal >= 2000 ? subtotal*0.10 : 0;
+    let total = subtotal - discount;
+
+    let info = '';
+    if(method==='PromptPay'){ info = `สแกน QR พร้อมเพย์เพื่อชำระเงิน ${total.toFixed(0)} ฿`; }
+    else if(method==='QR Code'){ info = `แสดง QR Code ของร้านเพื่อชำระเงิน ${total.toFixed(0)} ฿`; }
+    else if(method==='TrueMoney'){ info = `ใช้ TrueMoney Wallet เพื่อชำระเงิน ${total.toFixed(0)} ฿`; }
+
+    document.getElementById('paymentInfo').innerHTML = info;
+    alert(`เลือกช่องทาง: ${method}\nยอดรวมก่อนลด: ${subtotal.toFixed(0)} ฿\nส่วนลด: ${discount.toFixed(0)} ฿\nยอดสุทธิ: ${total.toFixed(0)} ฿\nฟังก์ชันยังไม่เชื่อมระบบจริง`);
+    closePaymentModal();
+    cart=[]; updateCart(); toggleCart();
+  }
+</script>
+
+</body>
+</html>
